@@ -1,14 +1,25 @@
+const indexedDB =
+  window.indexedDB ||
+  window.mozIndexDB ||
+  window.webkitIndexedDB ||
+  msIndexedDB ||
+  window.shimIndexedDB;
+
 let db;
 
 const request = indexedDB.open("budget", 1);
 
 request.onupgradeneeded = function (event) {
-  const db = event.target.result;
-  db.createObjectStore("BudgetList", { autoIncrement: true });
+  let db = event.target.result;
+  db.createObjectStore("pending", { autoIncrement: true });
 };
 
 request.onsuccess = (event) => {
   db = event.target.result;
+
+  if(navigator.onLine){
+    checkDatabase();
+  }
 };
 
 request.onerror = function (event) {
@@ -16,10 +27,8 @@ request.onerror = function (event) {
 };
 
 function checkDatabase() {
-  let transaction = db.transaction(["BudgetStore"], "readwrite");
-
-  const store = transaction.objectStore("BudgeStore");
-
+  const transaction = db.transaction(["pending"], "readwrite");
+  const store = transaction.objectStore("pending");
   const getAll = store.getAll();
 
   getAll.onsuccess = function () {
@@ -33,32 +42,22 @@ function checkDatabase() {
         },
       })
         .then((response) => response.json())
-        .then((res) => {
-          if (res.length !== 0) {
-            transaction = db.transaction(["BudgetStore"], "readwrite");
-
-            const currentStore = transaction.objectStore("BudgetStore");
+        .then(() => {
+          
+            const transaction = db.transaction(["pending"], "readwrite");
+            const currentStore = transaction.objectStore("pending");
             currentStore.clear();
-          }
+          
         });
     }
   };
-}
-
-request.onsuccess = function (event) {
-  console.log("success");
-  db.event.target.result;
-
-  if (navigator.onLine) {
-    console.log("Backed online!");
-    checkDatabase();
-  }
 };
 
 const saveRecord = (record) => {
-  const transaction = db.transaction(["BudgetStore"], "readwrite");
+  console.log("Save record invoked");
+  const transaction = db.transaction(["pending"], "readwrite");
 
-  const store = transaction.objectStore("BudgetStore");
+  const store = transaction.objectStore("pending");
 
   store.add(record);
 };

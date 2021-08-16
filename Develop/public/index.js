@@ -1,3 +1,13 @@
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register("/service-worker.js").then(
+      register=>{
+        console.log("service worker registered", register)
+      }
+    )  })
+}
+
+
 let transactions = [];
 let myChart;
 
