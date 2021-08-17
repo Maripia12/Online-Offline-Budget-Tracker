@@ -29,4 +29,4 @@ The user is able to add expenses and deposits to their budget with or without an
 
 
 
-![screenshot](Develop/Images/budgettracker.png)
+![screenshot](Images/budgettracker.png)
