@@ -8,7 +8,7 @@ const FILES_TO_CACHE = [
   "/icons/icon-512x512.png"
 ];
 
-let PRE_CACHE = "precache-v1";
+const PRE_CACHE = "precache-v1";
 const RUNTIME = "runtime";
 
 self.addEventListener("install", (event) => {
